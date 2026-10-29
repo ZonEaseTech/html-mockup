@@ -23,6 +23,13 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("Pragma", "no-cache")
         super().end_headers()
 
+    def guess_type(self, path):
+        # 文本类响应补 charset，否则浏览器按本机默认编码猜（中文环境常猜成 GBK，.md/.txt/.csv 全是乱码）
+        ctype = super().guess_type(path)
+        if (ctype.startswith("text/") or ctype in ("application/json", "application/javascript")) and "charset" not in ctype:
+            ctype += "; charset=utf-8"
+        return ctype
+
     def log_message(self, fmt, *args):
         sys.stderr.write("%s %s\n" % (self.log_date_time_string(), fmt % args))
 

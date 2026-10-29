@@ -370,6 +370,8 @@ npx --no-install mmdc --version || npm i -g @mermaid-js/mermaid-cli   # 需要 g
 | 术语写「商品」「内部编码」 | 跟系统对不上 | 用「物品」「物品编码」等系统真名 |
 | 同需求新建一个目录 | 对方手里旧链接还是旧内容 | 改原目录;废弃的留 meta refresh 跳转 |
 | 改动汇报只讲改了什么、不讲影响谁 | 评审看不出风险,等于没审 | 表字段 / 业务规则 / 业务点 / 回滚,四块缺一不可 |
+| 直接给 `.md` / `.txt` / `.csv` 的 8008 链接 | 中文全是乱码(`婕旂ず鐜`那种):旧 serve.py 不带 `charset`,Chrome 在中文环境按 GBK 猜 | serve.py 已对 text/* 补 `charset=utf-8`(2026-10-26)。**改了 serve.py 之后 bootstrap 不会重启**(服务在跑就跳过),要 `pkill -f "serve.py .* 8008"` 再 `nohup python3 serve.py ~/www 8008 >> ~/www/.serve.log &`;日志路径写绝对路径,写错会起不来、全站 502 |
+| 用 `google-chrome --headless --screenshot` 截带 `#锚点` / JS 滚动定位的页面 | 截出来整页空白、或顶栏跑到页面中间 —— 是 headless 截图对**已滚动文档**的假象,页面本身没问题(实测 2026-10-26 讲解书) | 看滚动后的真实画面用 puppeteer(mermaid-cli 自带:`~/.npm-global/lib/node_modules/@mermaid-js/mermaid-cli/node_modules/puppeteer`,`executablePath:'/usr/bin/google-chrome'`),`page.goto(url+'#锚点')` 后 `page.screenshot`;顺带能按键、点击、`page.pdf()` 数页数。样例 `~/www/tapestry_demo_data/deck_check.js` |
 
 ## 10. desktop 原型
 
